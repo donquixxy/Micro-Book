@@ -11,6 +11,8 @@ type Books struct {
 	Price      float64   `json:"price" gorm:"column:price"`
 	CreatedAt  time.Time `json:"created_at" gorm:"column:created_at"`
 	UpdatedAt  time.Time `json:"updated_at" gorm:"column:updated_at"`
+	Category   *Category `json:"category,omitempty" gorm:"foreignKey:IDCategory;references:ID"`
+	Genre      *Genre    `json:"genre,omitempty" gorm:"foreignKey:IDGenre;references:ID"`
 }
 
 func (*Books) TableName() string {

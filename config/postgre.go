@@ -7,6 +7,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func InitPostgres(config *AppConfig) *gorm.DB {
@@ -14,7 +15,9 @@ func InitPostgres(config *AppConfig) *gorm.DB {
 		config.DBAddress, config.DBUsername, config.DBPassword, config.DBName, config.DBPort,
 	)
 
-	database, er := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	database, er := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Error),
+	})
 
 	if er != nil {
 		log.Fatalf("failed to open database %v", er)

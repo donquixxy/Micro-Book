@@ -9,6 +9,6 @@ type Genre struct {
 	UpdatedAt time.Time `json:"updated_at" gorm:"column:updated_at"`
 }
 
-func (g *Genre) String() string {
+func (g *Genre) TableName() string {
 	return "genre"
 }

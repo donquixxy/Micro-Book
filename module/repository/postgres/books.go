@@ -22,7 +22,9 @@ func NewBooksRepository(db *gorm.DB) repository.BooksRepository {
 func (b *booksRepository) GetByID(ctx context.Context, id string) (*entity.Books, error) {
 	var books *entity.Books
 
-	err := b.db.Where("id = ?", id).First(&books).Error
+	err := b.db.Where("id = ?", id).First(&books).
+		Preload("Category").Preload("Genre").
+		Error
 
 	if err != nil {
 		return nil, err
@@ -38,7 +40,7 @@ func (b *booksRepository) Create(ctx context.Context, value *entity.Books) error
 func (b *booksRepository) GetAll(ctx context.Context) ([]*entity.Books, error) {
 	var books []*entity.Books
 
-	b.db.Find(&books).Order("created_at DESC")
+	b.db.Order("created_at DESC").Preload("Category").Preload("Genre").Find(&books)
 
 	if len(books) == 0 {
 		return nil, errors.New("books not found")
@@ -58,7 +60,8 @@ func (b *booksRepository) Update(ctx context.Context, newVal *entity.Books) erro
 func (b *booksRepository) GetByIDCategory(ctx context.Context, idCategory string) ([]*entity.Books, error) {
 	var books []*entity.Books
 
-	b.db.Where("id_category = ?", idCategory).Find(&books).Order("created_at DESC")
+	b.db.Where("id_category = ?", idCategory).Find(&books).Order("created_at DESC").
+		Preload("Category").Preload("Genre")
 
 	if len(books) == 0 {
 		return nil, errors.New("no books found")

@@ -17,6 +17,8 @@ func main() {
 	server := server.NewServer(conf.Environment)
 	_ = pg
 
+	server.ServerWrapper(pg)
+
 	go func() {
 		if err := server.Router.Run("localhost:8982"); err != nil {
 			log.Fatalf("Gin router error %v", err)
