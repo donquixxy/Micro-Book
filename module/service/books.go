@@ -8,6 +8,8 @@ import (
 	"micro-book/module/repository"
 	"micro-book/utils"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type BookService interface {
@@ -17,10 +19,12 @@ type BookService interface {
 	GetByID(ctx context.Context, id string) (*entity.Books, error)
 	GetAll(ctx context.Context) ([]*entity.Books, error)
 	GetByIDCategory(ctx context.Context, idCategory string) ([]*entity.Books, error)
+	Update(ctx context.Context, v *request.UpdateBookRequest) (*entity.Books, error)
 }
 
 type bookService struct {
 	bookRepository repository.BooksRepository
+	uidGen         uuid.UUID
 }
 
 func NewBookService(
@@ -113,4 +117,24 @@ func (s *bookService) GetByIDCategory(ctx context.Context, idCategory string) ([
 	}
 
 	return books, nil
+}
+
+func (s *bookService) Update(ctx context.Context, v *request.UpdateBookRequest) (*entity.Books, error) {
+	b :=
+		&entity.Books{
+			ID:         v.ID,
+			IDCategory: v.IDCategory,
+			IDGenre:    v.IDGenre,
+			Title:      v.Title,
+			ISBN:       v.ISBN,
+			Price:      v.Price,
+			UpdatedAt:  time.Now(),
+		}
+	err := s.bookRepository.Update(ctx, b)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
 }
