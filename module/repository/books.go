@@ -13,4 +13,6 @@ type BooksRepository interface {
 	GetAll(ctx context.Context) ([]*entity.Books, error)
 	Update(ctx context.Context, newVal *entity.Books) error
 	GetByIDCategory(ctx context.Context, idCategory string) ([]*entity.Books, error)
+	CreateCategory(ctx context.Context, value *entity.Category) error
+	CreateGenre(ctx context.Context, value *entity.Genre) error
 }

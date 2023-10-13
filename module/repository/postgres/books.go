@@ -66,3 +66,14 @@ func (b *booksRepository) GetByIDCategory(ctx context.Context, idCategory string
 
 	return books, nil
 }
+
+func (b *booksRepository) CreateCategory(ctx context.Context, value *entity.Category) error {
+	err := b.db.Create(&value).Error
+
+	return err
+}
+func (b *booksRepository) CreateGenre(ctx context.Context, value *entity.Genre) error {
+	err := b.db.Create(&value).Error
+
+	return err
+}
