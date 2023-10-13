@@ -1,7 +1,15 @@
 package main
 
-import "log"
+import (
+	"log"
+	"micro-book/config"
+)
 
 func main() {
-	log.Println("Hello world From book !")
+	conf := config.InitConfig()
+
+	log.Println("App is running on env :", conf.Environment)
+	pg := config.InitPostgres(conf)
+
+	_ = pg
 }

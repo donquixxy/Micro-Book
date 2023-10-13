@@ -11,6 +11,8 @@ type AppConfig struct {
 	DBAddress   string `mapstructure:"DB_ADDRESS"`
 	DBPassword  string `mapstructure:"DB_PASSWORD"`
 	DBUsername  string `mapstructure:"DB_USERNAME"`
+	DBName      string `mapstructure:"DB_NAME"`
+	DBPort      int    `mapstructure:"DB_PORT"`
 }
 
 var appConfig *AppConfig
@@ -22,8 +24,9 @@ func InitConfig() *AppConfig {
 	}
 
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("../")
 	viper.SetConfigName("app")
-	viper.SetConfigType(".env")
+	viper.SetConfigType("env")
 
 	err := viper.ReadInConfig()
 
@@ -31,11 +34,12 @@ func InitConfig() *AppConfig {
 		log.Fatalf("Failed read config %v", err)
 	}
 
-	err = viper.Unmarshal(appConfig)
+	err = viper.Unmarshal(&appConfig)
 
 	if err != nil {
 		log.Fatalf("Failed unmarshal config %v", err)
 	}
 
+	log.Println("Success connected to DB")
 	return appConfig
 }
