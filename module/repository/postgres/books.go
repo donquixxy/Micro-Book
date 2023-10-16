@@ -22,7 +22,7 @@ func NewBooksRepository(db *gorm.DB) repository.BooksRepository {
 func (b *booksRepository) GetByID(ctx context.Context, id string) (*entity.Books, error) {
 	var books *entity.Books
 
-	err := b.db.Where("id = ?", id).First(&books).
+	err := b.db.WithContext(ctx).Where("id = ?", id).First(&books).
 		Preload("Category").Preload("Genre").
 		Error
 
@@ -33,14 +33,14 @@ func (b *booksRepository) GetByID(ctx context.Context, id string) (*entity.Books
 	return books, nil
 }
 func (b *booksRepository) Create(ctx context.Context, value *entity.Books) error {
-	result := b.db.Create(&value)
+	result := b.db.WithContext(ctx).Create(&value)
 
 	return result.Error
 }
 func (b *booksRepository) GetAll(ctx context.Context) ([]*entity.Books, error) {
 	var books []*entity.Books
 
-	b.db.Order("created_at DESC").Preload("Category").Preload("Genre").Find(&books)
+	b.db.WithContext(ctx).Order("created_at DESC").Preload("Category").Preload("Genre").Find(&books)
 
 	if len(books) == 0 {
 		return nil, errors.New("books not found")
@@ -49,7 +49,7 @@ func (b *booksRepository) GetAll(ctx context.Context) ([]*entity.Books, error) {
 	return books, nil
 }
 func (b *booksRepository) Update(ctx context.Context, newVal *entity.Books) error {
-	err := b.db.Updates(&newVal).Error
+	err := b.db.WithContext(ctx).Updates(&newVal).Error
 
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func (b *booksRepository) Update(ctx context.Context, newVal *entity.Books) erro
 func (b *booksRepository) GetByIDCategory(ctx context.Context, idCategory string) ([]*entity.Books, error) {
 	var books []*entity.Books
 
-	b.db.Where("id_category = ?", idCategory).Find(&books).Order("created_at DESC").
+	b.db.WithContext(ctx).Where("id_category = ?", idCategory).Find(&books).Order("created_at DESC").
 		Preload("Category").Preload("Genre")
 
 	if len(books) == 0 {
@@ -71,12 +71,12 @@ func (b *booksRepository) GetByIDCategory(ctx context.Context, idCategory string
 }
 
 func (b *booksRepository) CreateCategory(ctx context.Context, value *entity.Category) error {
-	err := b.db.Create(&value).Error
+	err := b.db.WithContext(ctx).Create(&value).Error
 
 	return err
 }
 func (b *booksRepository) CreateGenre(ctx context.Context, value *entity.Genre) error {
-	err := b.db.Create(&value).Error
+	err := b.db.WithContext(ctx).Create(&value).Error
 
 	return err
 }
